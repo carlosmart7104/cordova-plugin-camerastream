@@ -1,0 +1,20 @@
+{
+	"version": "0.1.0",
+	"name": "cordova-plugin-camerastream",
+	"cordova_name": "Camera stream plugin",
+	"description": "Camera stream plugin",
+	"author": "carlosmart7104@gmail.com",
+	"licence": "MIT",
+	"keywords": [
+		"cordova",
+		"plugin",
+		"camera",
+		"stream"
+	],
+	"cordova": {
+		"id": "cordova-plugin-camerastream",
+		"platforms": [
+			"android"
+		]
+	}
+}

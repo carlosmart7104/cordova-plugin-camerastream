@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+	xmlns="http://apache.org/cordova/ns/plugins/1.0"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	id="cordova-plugin-camerastream"
+	version="0.1.0">
+	<name>Cordova Plugin Camera Stream</name>
+	<description>Cordova Plugin Camera Stream</description>
+	<licence>MIT</licence>
+	<keywords>cordova,plugin,camera,stream</keywords>
+
+	<engines>
+		<engine name="cordova" version=">=3.4.0"/>
+	</engines>
+
+	<js-module src="www/index.js" name="camerastream">
+		<clobbers target="camerastream" />
+	</js-module>
+
+	<platform name="android">
+		<config-file target="config.xml" parent="/*">
+			<feature name="CameraStreamPlugin">
+				<param
+					name="android-package"
+					value="org.carma.camerastream" />
+			</feature>
+		</config-file>
+
+		<config-file target="AndroidManifest.xml" parent="/*">
+			<uses-feature android:name="android.hardware.camera">
+            <uses-permission android:name="android.permission.CAMERA" />
+        </config-file>
+
+		<!-- Mapping source files (.java) -->
+		<!-- Camera Stream Plugin Interface Class -->
+		<source-file src="src/android/java/CameraStreamPlugin.java"
+			target-dir="app/src/main/java/org/carma/" />
+
+		<!-- Camera Stream Main Class -->
+		<source-file src="src/android/java/CameraStream.java"
+			target-dir="app/src/main/java/org/carma/" />
+	</platform>	
+</plugin>
