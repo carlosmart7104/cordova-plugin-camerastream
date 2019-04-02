@@ -2,8 +2,9 @@
  * Exporta modulo para interfaz cliente JS del plugin
  * @Module cordova/camerastream
  */
- module.exports = {
+module.exports = {
  	init: function(successCallback, errorCallback) {
+ 		console.log('cordova.exec init is called');
  		cordova.exec(
  			successCallback,
  			errorCallback,
@@ -12,7 +13,8 @@
  			[]
  		);
  	},
- 	start(): function(successCallback, errorCallback) {
+ 	start: function(successCallback, errorCallback) {
+ 		console.log('cordova.exec start is called');
  		cordova.exec(
  			successCallback,
  			errorCallback,
@@ -21,7 +23,8 @@
  			[]
  		);
  	},
- 	stop(): function(successCallback, errorCallback) {
+ 	stop: function(successCallback, errorCallback) {
+ 		console.log('cordova.exec stop is called');
  		cordova.exec(
  			successCallback,
  			errorCallback,
@@ -30,7 +33,8 @@
  			[]
  		);
  	},
- 	getFrame(): function(successCallback, errorCallback) {
+ 	getFrame: function(successCallback, errorCallback) {
+ 		console.log('cordova.exec getFrame is called');
  		cordova.exec(
  			successCallback,
  			errorCallback,

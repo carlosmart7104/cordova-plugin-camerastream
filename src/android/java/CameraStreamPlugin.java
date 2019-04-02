@@ -7,7 +7,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
-public class FingerprintPlugin extends CordovaPlugin {
+public class CameraStreamPlugin extends CordovaPlugin {
 	protected static final String TAG = "CameraStreamPlugin";
 	protected CallbackContext context;
 
@@ -25,24 +25,23 @@ public class FingerprintPlugin extends CordovaPlugin {
 	public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
 		context = callbackContext;
         boolean result = true;
+        Log.i(TAG, "execute command!!!");
         try {
             if (action.equals("init")) {
                 Log.i(TAG, "execute init");
-                callbackContext.success();
 
             } else if (action.equals("start")) {
                 Log.i(TAG, "execute start");
-                callbackContext.success();
 
             } else if (action.equals("stop")) {
                 Log.i(TAG, "execute stop");
-                callbackContext.success();
 
             } else if (action.equals("getFrame")) {
                 Log.i(TAG, "execute getFrame");
-                callbackContext.success();
 
             }
+            context.success("OK");
+
         } catch (Exception e) {
             handleException(e);
             result = false;

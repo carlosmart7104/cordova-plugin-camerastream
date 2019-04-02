@@ -13,8 +13,8 @@
 		<engine name="cordova" version=">=3.4.0"/>
 	</engines>
 
-	<js-module src="www/index.js" name="camerastream">
-		<clobbers target="camerastream" />
+	<js-module src="www/index.js" name="CameraStream">
+		<clobbers target="CameraStream" />
 	</js-module>
 
 	<platform name="android">
@@ -22,12 +22,12 @@
 			<feature name="CameraStreamPlugin">
 				<param
 					name="android-package"
-					value="org.carma.camerastream" />
+					value="org.carma.CameraStreamPlugin" />
 			</feature>
 		</config-file>
 
 		<config-file target="AndroidManifest.xml" parent="/*">
-			<uses-feature android:name="android.hardware.camera">
+			<uses-feature android:name="android.hardware.camera" />
             <uses-permission android:name="android.permission.CAMERA" />
         </config-file>
 
@@ -37,7 +37,7 @@
 			target-dir="app/src/main/java/org/carma/" />
 
 		<!-- Camera Stream Main Class -->
-		<source-file src="src/android/java/CameraStream.java"
-			target-dir="app/src/main/java/org/carma/" />
+		<!--source-file src="src/android/java/CameraStream.java"
+			target-dir="app/src/main/java/org/carma/" /-->
 	</platform>	
 </plugin>
