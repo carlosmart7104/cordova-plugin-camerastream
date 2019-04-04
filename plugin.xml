@@ -3,7 +3,7 @@
 	xmlns="http://apache.org/cordova/ns/plugins/1.0"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	id="cordova-plugin-camerastream"
-	version="0.1.0">
+	version="0.1.1">
 	<name>Cordova Plugin Camera Stream</name>
 	<description>Cordova Plugin Camera Stream</description>
 	<licence>MIT</licence>
@@ -37,7 +37,7 @@
 			target-dir="app/src/main/java/org/carma/" />
 
 		<!-- Camera Stream Main Class -->
-		<!--source-file src="src/android/java/CameraStream.java"
-			target-dir="app/src/main/java/org/carma/" /-->
+		<source-file src="src/android/java/CameraStream.java"
+			target-dir="app/src/main/java/org/carma/" />
 	</platform>	
 </plugin>

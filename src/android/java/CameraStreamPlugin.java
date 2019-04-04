@@ -3,8 +3,6 @@ package org.carma;
 import org.apache.cordova.*;
 import org.json.JSONArray;
 import org.json.JSONException;
-import android.app.Activity;
-import android.os.Bundle;
 import android.util.Log;
 
 public class CameraStreamPlugin extends CordovaPlugin {
@@ -14,33 +12,37 @@ public class CameraStreamPlugin extends CordovaPlugin {
 	@Override
     public void onResume(boolean multitasking) {
         Log.i(TAG, "onResume in CameraStreamPlugin.java");
+        CameraStream.start(context);
     }
 
     @Override
     public void onPause(boolean multitasking) {
         Log.i(TAG, "onPause in CameraStreamPlugin.java");
+        CameraStream.stop(context);
     }
 
     @Override
 	public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
 		context = callbackContext;
         boolean result = true;
-        Log.i(TAG, "execute command!!!");
         try {
             if (action.equals("init")) {
-                Log.i(TAG, "execute init");
+                // Log.i(TAG, "execute CameraStream.init()");
+                CameraStream.init(context);
 
             } else if (action.equals("start")) {
-                Log.i(TAG, "execute start");
+                // Log.i(TAG, "execute CameraStream.start()");
+                CameraStream.start(context);
 
             } else if (action.equals("stop")) {
-                Log.i(TAG, "execute stop");
+                // Log.i(TAG, "execute CameraStream.stop()");
+                CameraStream.stop(context);
 
             } else if (action.equals("getFrame")) {
-                Log.i(TAG, "execute getFrame");
+                // Log.i(TAG, "execute CameraStream.getFrame()");
+                CameraStream.getFrame(context);
 
             }
-            context.success("OK");
 
         } catch (Exception e) {
             handleException(e);
