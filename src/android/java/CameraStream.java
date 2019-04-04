@@ -49,6 +49,7 @@ class CameraStream {
 		context = callbackContext;
 
 		camera = Camera.open();
+
 		camera.startPreview();
 		camera.setPreviewCallback(previewCallback);
 
@@ -73,22 +74,38 @@ class CameraStream {
 
 		// camera.takePicture(null, null, jpegCallback);
 
-		int w = mDesiredWidth;
-		int h = mDesiredHeight;
-		int[] rgbArray = new int[w * h];
+		try {
+			if (lastImage != null) {
+				int w = mDesiredWidth;
+				int h = mDesiredHeight;
+				int[] rgbArray = new int[w * h];
 
-		decodeYUV420SP(rgbArray, lastImage, w, h);
-		Bitmap bitmap = Bitmap.createBitmap(rgbArray, w, h, Config.ARGB_8888);
+				decodeYUV420SP(rgbArray, lastImage, w, h);
+				Bitmap bitmap = Bitmap.createBitmap(rgbArray, w, h, Config.ARGB_8888);
 
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.JPEG, 75, outputStream);
+				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-		String output = Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
+				Matrix matrix = new Matrix();
+				matrix.postRotate(90);
 
-		Log.i(TAG, "output:");
-		Log.i(TAG, output);
+				Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap , 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
-		context.success(output);
+				rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 75, outputStream);
+
+				String output = Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
+				output = "data:image/jpeg;base64," + output;
+
+				Log.i(TAG, "output:");
+				Log.i(TAG, output);
+
+				context.success(output);
+			} else {
+				Log.i(TAG, "lastImage is null");
+				context.success();
+			}
+		} catch (Exception e) {
+			handleException(e);
+		}
 	}
 
 	/* private static PictureCallback jpegCallback = new PictureCallback() {
@@ -136,8 +153,6 @@ class CameraStream {
 			mDesiredHeight = camera.getParameters().getPreviewSize().height;
 
 			if (data != null) {
-				Log.i(TAG, "data:");
-				Log.i(TAG, new String(data));
 				Log.i(TAG, "data.length");
 				Log.i(TAG, Integer.toString(data.length));
 
