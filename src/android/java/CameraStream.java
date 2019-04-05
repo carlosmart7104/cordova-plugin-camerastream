@@ -26,23 +26,12 @@ class CameraStream {
 	protected static JSONObject response;
 	protected static JSONObject dataValues;
 
-	private static byte[] lastImage;
+	public static int cameraWidth = 1280;
+	public static int cameraHeight = 720;
+
 	private static int fpscount;
 	private static long lasttime = 0;
 	public static float currentFPS = 0f;
-	public byte[][] frameBuffers;
-	public int fbCounter = 0;
-	private boolean newImageNeeded;
-	private long lastImageRequest = 0;
-	public static int mDesiredWidth = 1280;
-	public static int mDesiredHeight = 720;
-
-	public static void init(CallbackContext callbackContext) {
-		Log.i(TAG, "init() CameraStream.java");
-		context = callbackContext;
-
-		callbackContext.success();
-	}
 
 	public static void start(CallbackContext callbackContext) {
 		Log.i(TAG, "start() CameraStream.java");
@@ -50,10 +39,11 @@ class CameraStream {
 
 		camera = Camera.open();
 
+		cameraWidth = camera.getParameters().getPreviewSize().width;
+		cameraHeight = camera.getParameters().getPreviewSize().height;
+
 		camera.startPreview();
 		camera.setPreviewCallback(previewCallback);
-
-		callbackContext.success();
 	}
 
 	public static void stop(CallbackContext callbackContext) {
@@ -62,25 +52,23 @@ class CameraStream {
 
 		camera.setPreviewCallback(null);
 		camera.stopPreview();
+
 		camera.release();
 		camera = null;
 
 		callbackContext.success();
 	}
 
-	public static void getFrame(CallbackContext callbackContext) {
-		Log.i(TAG, "getFrame() CameraStream.java");
-		context = callbackContext;
+	private static PreviewCallback previewCallback = new PreviewCallback() {
+		public void onPreviewFrame(byte[] data, Camera camera) {
+			Log.i(TAG, "onPreviewFrame()");
 
-		// camera.takePicture(null, null, jpegCallback);
-
-		try {
-			if (lastImage != null) {
-				int w = mDesiredWidth;
-				int h = mDesiredHeight;
+			if (data != null) {
+				int w = cameraWidth;
+				int h = cameraHeight;
 				int[] rgbArray = new int[w * h];
 
-				decodeYUV420SP(rgbArray, lastImage, w, h);
+				decodeYUV420SP(rgbArray, data, w, h);
 				Bitmap bitmap = Bitmap.createBitmap(rgbArray, w, h, Config.ARGB_8888);
 
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -98,67 +86,15 @@ class CameraStream {
 				Log.i(TAG, "output:");
 				Log.i(TAG, output);
 
-				context.success(output);
-			} else {
-				Log.i(TAG, "lastImage is null");
-				context.success();
-			}
-		} catch (Exception e) {
-			handleException(e);
-		}
-	}
-
-	/* private static PictureCallback jpegCallback = new PictureCallback() {
-		public void onPictureTaken(byte[] _data, Camera _camera) {
-			Log.i(TAG, "onPictureTaken()");
-
-			String base64jpeg = Base64.encodeToString(_data, Base64.NO_WRAP);
-			Bitmap image = BitmapFactory.decodeByteArray(_data, 0, _data.length);
-
-			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-			image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-			byte[] byteArray = byteArrayOutputStream.toByteArray();
-			String base64png = Base64.encodeToString(byteArray, Base64.NO_WRAP);
-
-			Log.i(TAG, "base64jpeg");
-			Log.i(TAG, base64jpeg);
-
-			Log.i(TAG, "base64png");
-			Log.i(TAG, base64png);
-
-			try {
-				response = new JSONObject();
-				dataValues = new JSONObject();
-
-				response.put("status", "OK");
-				response.put("statusCode", 200);
-
-				dataValues.put("jpeg", base64jpeg);
-				dataValues.put("png", base64png);
-
-				response.put("data", dataValues);
-			} catch (Exception e) {
-				handleException(e);
-			}
-
-			context.success(response.toString());
-		}
-	}; */
-
-	private static PreviewCallback previewCallback = new PreviewCallback() {
-		public void onPreviewFrame(byte[] data, Camera camera) {
-			Log.i(TAG, "onPreviewFrame()");
-
-			mDesiredWidth = camera.getParameters().getPreviewSize().width;
-			mDesiredHeight = camera.getParameters().getPreviewSize().height;
-
-			if (data != null) {
-				Log.i(TAG, "data.length");
-				Log.i(TAG, Integer.toString(data.length));
-
-				lastImage = data;
+				PluginResult result = new PluginResult(PluginResult.Status.OK, output);
+				result.setKeepCallback(true);
+				context.sendPluginResult(result);
 			} else {
 				Log.i(TAG, "data is null");
+
+				PluginResult result = new PluginResult(PluginResult.Status.ERROR, "data is null");
+				result.setKeepCallback(true);
+				context.sendPluginResult(result);
 			}
 
 			updateFps();
